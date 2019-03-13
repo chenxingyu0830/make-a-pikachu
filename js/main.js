@@ -169,7 +169,7 @@ function controlInputSpeed(){
       case 'skip':
         let container = document.querySelector('#code')
         let codeStyle = document.querySelector('#code-style')
-        container.innerHTML = code
+        container.innerHTML = Prism.highlight(code, Prism.languages.css, 'css')
         codeStyle.innerHTML = code
         container.scrollTop = container.scrollHeight
         window.clearTimeout(codeInputTimeoutID)
@@ -188,7 +188,7 @@ function writeCode(code, prefix) {
     codeInputTimeoutID  = setTimeout(write, duration)
     function write(){
       n += 1
-      container.innerHTML = code.substring(0, n)
+      container.innerHTML = Prism.highlight(code.substring(0, n), Prism.languages.css, 'css')
       codeStyle.innerHTML = code.substring(0, n)
       container.scrollTop = container.scrollHeight
       if (n < code.length) {
