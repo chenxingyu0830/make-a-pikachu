@@ -1,30 +1,12 @@
-! function () {
-  var duration = 50
-  function writeCode(code, prefix) {
-    let container = document.querySelector('#code')
-    let codeStyle = document.querySelector('#code-style')
-    let n = 0
-    let id
-    return new Promise((resolve) => {
-      id = setTimeout(write, duration)
-      function write(){
-        n += 1
-        container.innerHTML = code.substring(0, n)
-        codeStyle.innerHTML = code.substring(0, n)
-        container.scrollTop = container.scrollHeight
-        if (n < code.length) {
-          id = setTimeout(write, duration)
-        }
-      }
-    })
-  }
-  let code = `
+
+let duration = 50
+let codeInuptTimeout
+let code = `
 /*
  * 首先，需要准备皮卡丘的外貌颜色 
  */  
 .preview{
   height: 100%;
-  border: 1px solid green;
   background: #FFE600;
   display: flex;
   justify-content: center;
@@ -165,12 +147,13 @@
  * 希望你能喜欢~
  */ 
 `
-  writeCode(code, '')
+writeCode(code, '')
 
+
+function controlInputSpeed(){
   $('.actions').on('click', 'button', function(e){
-    let $button = $(e.currentTarget) // button
+    let $button = $(e.currentTarget) // 获得当前点击的按钮是哪一个
     let speed = $button.attr('data-speed')
-    console.log(speed)
     $button.addClass('active')
       .siblings('.active').removeClass('active')
     switch(speed){
@@ -183,6 +166,37 @@
       case 'fast':
         duration = 10
         break
+      case 'skip':
+        let container = document.querySelector('#code')
+        let codeStyle = document.querySelector('#code-style')
+        container.innerHTML = code
+        codeStyle.innerHTML = code
+        container.scrollTop = container.scrollHeight
+        window.clearTimeout(codeInputTimeoutID)
+        break
+        
     }
   })
-}.call()
+}
+
+function writeCode(code, prefix) {
+  let container = document.querySelector('#code')
+  let codeStyle = document.querySelector('#code-style')
+  let n = 0
+  
+  return new Promise((resolve) => {
+    codeInputTimeoutID  = setTimeout(write, duration)
+    function write(){
+      n += 1
+      container.innerHTML = code.substring(0, n)
+      codeStyle.innerHTML = code.substring(0, n)
+      container.scrollTop = container.scrollHeight
+      if (n < code.length) {
+        codeInputTimeoutID  = setTimeout(write, duration)
+      }
+    }
+    controlInputSpeed()
+  })
+}
+
+
